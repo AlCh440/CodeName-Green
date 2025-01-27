@@ -6,6 +6,8 @@ public class CableShooter : MonoBehaviour
 {
     private GameObject hook;
     private float speed = 24f;
+    public float timeHolding;
+    public float timeHolded;
     [SerializeField] private GameObject prefab;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Rigidbody2D playerRb;
@@ -19,13 +21,30 @@ public class CableShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cable") && hook == null)
+
+
+        if (Input.GetButtonUp("Cable") && hook == null)
         {
+            Debug.Log("time holded = " + timeHolding);
+            timeHolded = timeHolding;
             ShootHook();
         }
-        else if (Input.GetButtonDown("Unattach") && hook != null)
+
+        if (Input.GetButtonDown("Unattach") && hook != null)
         {
             DeleteHook();
+        }
+
+        if (Input.GetKey("mouse 0"))
+        {
+            if (timeHolding < 2f)
+            {
+                timeHolding += 0.002f;
+            }
+        }
+        else
+        {
+            timeHolding = 0f;
         }
     }
 
@@ -47,7 +66,7 @@ public class CableShooter : MonoBehaviour
 
         var mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0f; // zero z
-        
+
         Vector2 pos = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
 
         return pos;
@@ -60,6 +79,13 @@ public class CableShooter : MonoBehaviour
         Vector2 vec = new Vector2(vector.x / divident, vector.y / divident);
         return vec;
     }
+
+
+    public float distanceFromPlayer()
+    {
+        return timeHolded * 3;
+    }
+
     void DeleteHook()
     {
         Destroy(hook);

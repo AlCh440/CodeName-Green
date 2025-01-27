@@ -383,6 +383,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.48f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/Cable Shooter.cs"
 "Assets/Scripts/Camera Movement.cs"
+"Assets/Scripts/Follow Mouse.cs"
 "Assets/Scripts/Player Movement.cs"
 "Assets/Scripts/StickToWalls.cs"
 "Assets/Scripts/TimeToDie.cs"
