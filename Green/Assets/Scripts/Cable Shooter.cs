@@ -15,7 +15,6 @@ public class CableShooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //debug Log
     }
 
     // Update is called once per frame
@@ -25,13 +24,13 @@ public class CableShooter : MonoBehaviour
 
         if (Input.GetButtonUp("Cable") && hook == null)
         {
-            Debug.Log("time holded = " + timeHolding);
-            timeHolded = timeHolding;
+            timeHolded = timeHolding * 24f;
             ShootHook();
         }
 
         if (Input.GetButtonDown("Unattach") && hook != null)
         {
+            Debug.Log("attampting delete");
             DeleteHook();
         }
 
@@ -39,7 +38,11 @@ public class CableShooter : MonoBehaviour
         {
             if (timeHolding < 2f)
             {
-                timeHolding += 0.002f;
+                timeHolding += 0.008f;
+            }
+            else if (timeHolding > 2f)
+            {
+                timeHolding == 2f;
             }
         }
         else
@@ -54,10 +57,9 @@ public class CableShooter : MonoBehaviour
 
         Vector2 mouse = GetMousePosition();
         Vector2 divident = GetVectorDivided(mouse);
-        Debug.Log(divident.x + " " + divident.y);
 
         Rigidbody2D rb = hook.GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(speed * divident.x, speed * divident.y);
+        rb.velocity = new Vector2(timeHolded * divident.x, timeHolded * divident.y);
         //rb.position = new Vector2(divident.x, divident.y);
     }
 
@@ -88,6 +90,29 @@ public class CableShooter : MonoBehaviour
 
     void DeleteHook()
     {
+        bool t = true;
+        DistanceJoint2D joint = hook.GetComponent<DistanceJoint2D>();
+
+        if (joint.connectedBody != null)
+        {
+            GameObject obj = joint.connectedBody.gameObject;
+
+            while (t)
+            {
+                if (obj.name != "Player")
+                {
+                    joint = obj.GetComponent<DistanceJoint2D>();
+                    GameObject tempObj = joint.connectedBody.gameObject;
+
+                    Destroy(obj);
+                    obj = tempObj;
+                }
+                else
+                {
+                    t = false;
+                }
+            }
+        }
         Destroy(hook);
     }
 }
