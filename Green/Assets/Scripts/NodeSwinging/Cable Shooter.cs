@@ -8,7 +8,8 @@ public class CableShooter : MonoBehaviour
     private float speed = 24f;
     public float timeHolding;
     public float timeHolded;
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject prefabHook;
+    [SerializeField] private GameObject prefabRect;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Rigidbody2D playerRb;
 
@@ -60,7 +61,7 @@ public class CableShooter : MonoBehaviour
 
     void ShootHook()
     {
-        hook = Instantiate(prefab, gameObject.transform.position, Quaternion.identity);
+        hook = Instantiate(prefabHook, gameObject.transform.position, Quaternion.identity);
 
         Vector2 mouse = GetMousePosition();
         Vector2 divident = GetVectorDivided(mouse);
@@ -159,6 +160,33 @@ public class CableShooter : MonoBehaviour
         {
             Destroy(hook);
         }
+        else if (typeOfSwing == 5)
+        {
+            bool t = true;
+            HingeJoint2D joint = hook.GetComponent<HingeJoint2D>();
+
+            if (joint.connectedBody != null)
+            {
+                GameObject obj = joint.connectedBody.gameObject;
+
+                while (t)
+                {
+                    if (obj.name != "Player")
+                    {
+                        joint = obj.GetComponent<HingeJoint2D>();
+                        GameObject tempObj = joint.connectedBody.gameObject;
+
+                        Destroy(obj);
+                        obj = tempObj;
+                    }
+                    else
+                    {
+                        t = false;
+                    }
+                }
+            }
+            Destroy(hook);
+        }
     }
 
     public void ChangeType(int i)
@@ -178,7 +206,8 @@ public class CableShooter : MonoBehaviour
     public void CreateCable(GameObject obj) // next idea is hinge joint between rectangles 
     {
         if (typeOfSwing == 1 || typeOfSwing == 2) ComplexCable(obj);
-        if (typeOfSwing == 3 || typeOfSwing == 4) SimpleCable(obj);
+        else if (typeOfSwing == 3 || typeOfSwing == 4) SimpleCable(obj);
+        else if (typeOfSwing == 5) ComplexCableRect(obj);
     }
 
     public void SimpleCable(GameObject obj)
@@ -235,6 +264,52 @@ public class CableShooter : MonoBehaviour
         }
     }
 
+    private void ComplexCableRect(GameObject obj)
+    {
+        float dis = Vector2.Distance(gameObject.transform.position, obj.transform.position);
+
+        float iterations = dis / 0.4f;
+        Vector2 norm = Normalize(gameObject.transform.position, obj.transform.position);
+        norm *= 0.4f;
+        Vector2 spawnPos = gameObject.transform.position;
+
+        lastNode = null;
+        actualNode = null;
+
+        for (int i = 0; i < iterations; i++)
+        {
+            spawnPos += norm;
+
+            // Create node
+            if (!(i > iterations - 1)) actualNode = Instantiate(prefabRect, spawnPos, Quaternion.identity);
+
+            // if there is a node before attach them, else attach to gameObject, if its the last, attach to hook
+            if (lastNode == null)
+            {
+                Debug.Log("type 1");
+                CreateHingeJoint(actualNode, gameObject, -0.5f, 0.0f);
+            }
+            else if (lastNode != null)
+            {
+                if (!(i > iterations - 1))
+                {
+                    // standart procedure
+                    Debug.Log("type 2");
+                    CreateHingeJoint(actualNode, lastNode, -0.5f, 0.5f);
+                }
+                else
+                {
+                    // l;ast procedure
+                    Debug.Log("type 3");
+                    CreateHingeJoint(obj, lastNode, 0.0f, 0.5f);
+                }
+            }
+
+            //assign lastnode
+            lastNode = actualNode;
+        }
+    }
+
     private void CreateDistanceJoint(GameObject firstNode, GameObject SecondNode, float distance)
     {
         // first procedure
@@ -253,6 +328,16 @@ public class CableShooter : MonoBehaviour
         //joint.spring = 4.5f;
         joint.dampingRatio = 1f;
         joint.frequency = 6.5f;
+    }
+
+    private void CreateHingeJoint(GameObject firstNode, GameObject secondNode, float firstOffSet, float secondOffSet)
+    {
+        HingeJoint2D joint = firstNode.AddComponent<HingeJoint2D>();
+        joint.connectedBody = secondNode.GetComponent<Rigidbody2D>();
+        joint.connectedBody = secondNode.GetComponent<Rigidbody2D>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.anchor = new Vector2 (0.0f, firstOffSet);
+        joint.connectedAnchor = new Vector2 (0.0f, secondOffSet);
     }
 }
 

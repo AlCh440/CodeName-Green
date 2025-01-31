@@ -15,8 +15,6 @@ public class StickToWalls : MonoBehaviour
         player = GameObject.Find("Player");
         GameObject obj = GameObject.Find("Aim Reticle");
         follow = player.GetComponent<CableShooter>();
-
-
     }
 
     // Update is called once per frame
