@@ -12,6 +12,7 @@ public class CableShooter : MonoBehaviour
     [SerializeField] private GameObject prefabRect;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Rigidbody2D playerRb;
+    
 
     private float distance = 2.5f;
     public GameObject nodePrefab;

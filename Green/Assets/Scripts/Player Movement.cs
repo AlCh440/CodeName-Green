@@ -4,10 +4,22 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float horizontal;
-    private float speed = 6f;
-    private float jumpingPower = 12f;
+    public float horizontal;
+    private float speed = 9f;
+    private float acceleration = 13f;
+    private float decceleration = 16f;
+    private float jumpingPower = 13f;
+    private float frictionAmount = 0.22f;
+    private float velPower = 0.96f;
     private bool isFacingRight = true;
+
+    //jumping
+    private bool isJumping = false;
+    private bool jumpInputReleased = true;
+    private int lastGroundedTime = 0;
+    private int lastJumpTime = 0;
+    private int coyoteTime = -15;
+    private float jumpCutMultiplier = 0.4f;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -16,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,29 +36,81 @@ public class PlayerMovement : MonoBehaviour
     {
         // movement
         horizontal = Input.GetAxisRaw("Horizontal");
+
+        if (horizontal > 0)
+        {
+            horizontal = 1;
+        }
+        else if (horizontal < 0)
+        {
+            horizontal = -1;
+        }
+        else horizontal = 0;
+
+        IsGrounded();
         
-        //Jumping
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (lastGroundedTime < 0)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.AddForce(Vector2.up * jumpingPower, ForceMode2D.Impulse);
+                lastGroundedTime = 0;
+                lastJumpTime = 0;
+                isJumping = true;
+                jumpInputReleased = false;
+                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            }
+
+
+        }
+        else
+        {
+            //Jump slow descent
+            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+            {
+                rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
+            }
         }
 
-        //Jump slow descent
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-
+        lastGroundedTime++;
+        lastJumpTime++;
         Flip();
     }
-    
-    private bool IsGrounded()
+
+    private void IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        if (Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer))
+        {
+            lastGroundedTime = coyoteTime;
+        }
+        else
+        {
+            isJumping = false;
+        }
     }
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        // Basic movement
+        float targetSpeed = horizontal * speed;
+        float speedDif = targetSpeed - rb.velocity.x;
+        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
+
+        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
+
+        rb.AddForce(movement * Vector2.right);
+
+        // Friction
+        if (!isJumping && horizontal == 0)
+        {
+            float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
+
+            amount *= Mathf.Sign(rb.velocity.x);
+
+            rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+        }
+
+        //Jumping
+        
     }
 
     private void Flip()

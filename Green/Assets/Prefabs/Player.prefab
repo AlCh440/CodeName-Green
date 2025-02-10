@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2995291489724836118}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8399914342774554024}
   - component: {fileID: 4117502900844739767}
   - component: {fileID: 4747940978677596867}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,6 +69,7 @@ Transform:
   - {fileID: 1233272785141321963}
   - {fileID: 8171469125600348175}
   - {fileID: 3517214690133113358}
+  - {fileID: 2415583249782339143}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8598551356861682140
@@ -226,9 +227,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeHolding: 0
   timeHolded: 0
-  prefab: {fileID: 1031349107648272969, guid: f2458c85a403ea64eaa8ff4429ba28da, type: 3}
+  prefabHook: {fileID: 1031349107648272969, guid: f2458c85a403ea64eaa8ff4429ba28da, type: 3}
+  prefabRect: {fileID: 5561028751643866796, guid: b7fa8f64222d4224eabf1f8ae2ff4d67, type: 3}
   spawnPoint: {fileID: 1233272785141321963}
   playerRb: {fileID: 8399914342774554024}
+  nodePrefab: {fileID: 3939403272338107272, guid: cf559d6b48830af40a90ccc5fc902b45, type: 3}
+  typeOfSwing: 5
+--- !u!1 &3753862582394900842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2415583249782339143}
+  m_Layer: 0
+  m_Name: CableConnector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2415583249782339143
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3753862582394900842}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4697426524270543755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4170842360358123940
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +275,7 @@ GameObject:
   - component: {fileID: 3517214690133113358}
   - component: {fileID: 1946981636800420518}
   - component: {fileID: 6949522172859466898}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Aim Reticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,7 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1233272785141321963}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spawn point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8171469125600348175}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Camera Follow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
