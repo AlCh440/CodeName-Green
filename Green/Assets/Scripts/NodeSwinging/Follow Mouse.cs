@@ -8,7 +8,6 @@ public class FollowMouse : MonoBehaviour
     private float disctanceToPlayer = 1.5f;
 
     [SerializeField] private Rigidbody2D playerRb;
-    [SerializeField] private CableShooter shooter;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +20,7 @@ public class FollowMouse : MonoBehaviour
     {
         mousePos = GetMousePosition();
         Vector2 vec = GetVectorDivided(mousePos);
-        vec *= (disctanceToPlayer + shooter.timeHolding);
+        vec *= (disctanceToPlayer);
 
 
 
