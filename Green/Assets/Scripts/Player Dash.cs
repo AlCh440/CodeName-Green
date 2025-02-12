@@ -63,6 +63,6 @@ public class PlayerDash : MonoBehaviour
             playerRb.velocity = vec;
         }
         isDashing = false;
-        canDash = true;
+        
     }
 }

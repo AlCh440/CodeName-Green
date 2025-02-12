@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5409739510440101085}
   - component: {fileID: 8108910021613867598}
   - component: {fileID: 8660279418100323979}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
 --- !u!114 &8660279418100323979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,3 +258,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  playerDash: {fileID: 0}

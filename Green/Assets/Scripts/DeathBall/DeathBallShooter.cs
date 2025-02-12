@@ -7,7 +7,7 @@ public class DeathBallShooter : MonoBehaviour
     [SerializeField] private GameObject ball;
     [SerializeField] private PlayerMovement playerMovement;
 
-    public float speedMultiplier = 18f;
+    public float speedMultiplier = 20f;
     // Start is called before the first frame update
     void Start()
     {

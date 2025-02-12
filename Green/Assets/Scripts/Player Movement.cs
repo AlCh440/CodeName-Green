@@ -91,11 +91,17 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer))
         {
             lastGroundedTime = coyoteTime;
+
+            if (!playerDash.isDashing)
+            {
+                playerDash.canDash = true;
+            }
         }
         else
         {
             isJumping = false;
         }
+
     }
     private void FixedUpdate()
     {
