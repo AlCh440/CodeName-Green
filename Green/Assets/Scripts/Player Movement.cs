@@ -5,10 +5,14 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float horizontal;
+    public float vertical;
+    public bool jump = false;
+    public bool dash = false;
+    public bool shoot = false;
     private float speed = 9f;
-    private float acceleration = 13f;
-    private float decceleration = 16f;
-    private float jumpingPower = 13f;
+    private float acceleration = 13 * 1.3f;
+    private float decceleration = 16 * 1.3f;
+    private float jumpingPower = 13f * 1.3f;
     private float frictionAmount = 0.22f;
     private float velPower = 0.96f;
     private bool isFacingRight = true;
@@ -24,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private PlayerDash playerDash;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +41,10 @@ public class PlayerMovement : MonoBehaviour
     {
         // movement
         horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        jump = Input.GetButtonDown("Jump");
+        dash = Input.GetButtonDown("Dash");
+        shoot = Input.GetButtonDown("Shoot");
 
         if (horizontal > 0)
         {
@@ -48,10 +57,10 @@ public class PlayerMovement : MonoBehaviour
         else horizontal = 0;
 
         IsGrounded();
-        
-        if (lastGroundedTime < 0)
+
+        if (lastGroundedTime < 0 && !playerDash.isDashing)
         {
-            if (Input.GetButtonDown("Jump"))
+            if (jump)
             {
                 rb.AddForce(Vector2.up * jumpingPower, ForceMode2D.Impulse);
                 lastGroundedTime = 0;
@@ -66,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             //Jump slow descent
-            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+            if (jump && rb.velocity.y > 0f)
             {
                 rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutMultiplier), ForceMode2D.Impulse);
             }
@@ -90,27 +99,29 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        // Basic movement
-        float targetSpeed = horizontal * speed;
-        float speedDif = targetSpeed - rb.velocity.x;
-        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
-
-        float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
-    
-        rb.AddForce(movement * Vector2.right);
-
-        // Friction
-        if (!isJumping && horizontal == 0)
+        if (!playerDash.isDashing)
         {
-            float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
+            // Basic movement
+            float targetSpeed = horizontal * speed;
+            float speedDif = targetSpeed - rb.velocity.x;
+            float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : decceleration;
 
-            amount *= Mathf.Sign(rb.velocity.x);
+            float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, velPower) * Mathf.Sign(speedDif);
 
-            rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+            rb.AddForce(movement * Vector2.right);
+
+            // Friction
+            if (!isJumping && horizontal == 0)
+            {
+                float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
+
+                amount *= Mathf.Sign(rb.velocity.x);
+
+                rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+            }
         }
-
         //Jumping
-        
+
     }
 
     private void Flip()

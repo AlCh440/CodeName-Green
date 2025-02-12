@@ -9,6 +9,7 @@ public class BallMechanics : MonoBehaviour
     private float attractionForce = 77f;
     private Rigidbody2D playerRb;
     [SerializeField] private GameObject player;
+    [SerializeField] private PlayerDash playerDash;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +24,7 @@ public class BallMechanics : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (attract)
+        if (attract && !playerDash.isDashing)
         {
             //Add force
             Vector2 vector = gameObject.transform.position - player.transform.position;
