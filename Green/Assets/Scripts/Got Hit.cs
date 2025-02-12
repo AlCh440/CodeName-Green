@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnOnPoint : MonoBehaviour
+public class GotHit : MonoBehaviour
 {
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private BallMechanics ball;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,7 @@ public class SpawnOnPoint : MonoBehaviour
     {
        if (other.CompareTag("Damage"))
        {
-            gameObject.transform.position = spawnPoint.position;
+           ball.AttractPlayer();
        }
 
     }
