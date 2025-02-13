@@ -90,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer))
         {
+            Debug.Log("standing");
             lastGroundedTime = coyoteTime;
 
             if (!playerDash.isDashing)
