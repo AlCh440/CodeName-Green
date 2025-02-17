@@ -5,7 +5,7 @@ using UnityEngine;
 public class CableShooter : MonoBehaviour
 {
     private GameObject hook;
-    private float speed = 24f;
+    //private float speed = 24f;
     public float timeHolding;
     public float timeHolded;
     [SerializeField] private GameObject prefabHook;
